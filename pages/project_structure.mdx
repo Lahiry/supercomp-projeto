@@ -1,0 +1,111 @@
+import Bleed from 'nextra-theme-docs/bleed'
+import Callout from 'nextra-theme-docs/callout'
+
+# Estrutura do projeto
+
+## Estrutura de pastas
+
+```bash
+.
+├── CMakeLists.txt
+├── bin
+├── build
+├── include
+├── lib
+│   ├── CMakeLists.txt
+│   ├── greedy
+│   │   ├── greedy.cpp
+│   │   └── greedy.hpp
+│   ├── random
+│   │   ├── random.cpp
+│   │   └── random.hpp
+│   └── scheduler
+│       ├── scheduler.cpp
+│       └── scheduler.hpp
+├── scripts
+│   ├── input_generator.bash
+│   └── output_generator.bash
+├── src
+│   ├── generator.cpp
+│   └── main.cpp
+└── valgrind
+    ├── callgrind_annotate_greedy.txt
+    ├── callgrind_annotate_random.txt
+    ├── callgrind.out.greedy
+    ├── callgrind.out.random
+    └── error_and_leakage_report.txt
+```
+
+- O arquívo `CMakeLists.txt` localizado na raiz contém as instruções de *compilação* do projeto.
+- A pasta `bin` conterá os arquivos executáveis gerados pelo comando `make`.
+- A pasta `build` conterá os arquivos gerados pelo `cmake` (é aqui que rodamos o comando `make`).
+- A pasta `include` conterá os arquivos de cabeçalho necessários para o projeto.
+- A pasta `lib` conterá as bibliotecas necessárias para o projeto.
+    - Para cada biblioteca criada, existe uma pasta com o nome da biblioteca, onde dentro dela existem os arquivos fonte e os arquivos de cabeçalho (`.cpp` e `.hpp`).
+- A pasta `scripts` conterá os scripts necessários para gerar os inputs e outputs do projeto.
+- A pasta `src` conterá o arquivo fonte do projeto (`main.cpp`) e o arquivo gerador de inputs (`generator.cpp`).
+- A pasta `valgrind` conterá os arquivos gerados pelo `valgrind` para análise de *leaks* e *performance*.
+
+## Arquitetura do projeto
+
+<Callout emoji="📚" title="Referências">
+    Este projeto foi realizado utilizando a linguagem de programação C++ com programação orientada a objetos.
+</Callout>
+
+- O projeto foi dividido em 3 partes principais:
+    - A biblioteca `scheduler` é responsável por ler os inputs e gerar os outputs. Nela está implementada a classe `Scheduler` que é responsável por ler os inputs, realizar checagens se o filme é válido e cabe na agenda, e gerar os outputs.
+    - A biblioteca `greedy` é responsável por implementar o algoritmo guloso. Nela está implementada a classe `Greedy` que herda da classe `Scheduler` e implementa o algoritmo guloso.
+    - A biblioteca `random` é responsável por implementar o algoritmo aleatório. Nela está implementada a classe `Random` que herda da classe `Scheduler` e implementa o algoritmo aleatório.
+
+<Callout emoji="⚠️" title="warning">
+    Para esse projeto, foi decidio que construiria o código utilizando programação com alocação 
+    dinâmica de memória, utilizando ponteiros como int *i = new int.
+    Ela permite ter mais controle sobre o uso da memória e criar estruturas de dados dinâmicas e 
+    escaláveis que podem ser alteradas em tempo de execução.
+
+    Uma das principais vantagens da alocação dinâmica é a possibilidade de alocar grandes quantidades de 
+    memória sem esgotar a pilha de chamadas da função. Isso é especialmente útil quando eu preciso criar 
+    uma grande quantidade de variáveis ou estruturas de dados em um curto período de tempo.
+
+    No entanto, é importante lembrar que a alocação dinâmica requer mais cuidado e atenção por parte do 
+    programador, pois é sua responsabilidade gerenciar a memória alocada e liberá-la quando não for mais 
+    necessária. Se o uso da alocação dinâmica for feito de maneira incorreta, pode levar a vazamentos de 
+    memória e erros graves no programa.
+</Callout>
+<Callout emoji="📚" title="Referências">
+    Para ver os resultados do `valgrind` de erros e vazamentos de memória, clique [aqui](results_comparison)
+</Callout>
+
+## Passos para executar o projeto
+<Callout emoji="📝">
+    Para executar o projeto, é necessário ter o `cmake` instalado, assim como a biblioteca `Boost`.
+</Callout>
+  - Para macOS, basta executar os seguintes comandos:
+  ```bash
+  brew install cmake
+  brew install boost
+  ```
+  - Para Linux, basta executar os seguintes comandos: 
+  ```bash
+  sudo apt install cmake
+  sudo apt install libboost-all-dev
+  ```
+
+- Para compilar o projeto, basta executar os seguintes comandos:
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
+
+- Para executar o projeto, basta executar o seguinte comando:
+```bash
+cd scripts
+./input_generator.bash
+./output_generator.bash
+```
+
+- Para executar o `generator.cpp` isoladamente, basta executar o seguinte comando:
+```bash
+./bin/generator <file_name>.<file_extension>
+```
