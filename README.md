@@ -1,1 +1,1 @@
-# supercomp-projeto
+# Projeto de Supercomputação

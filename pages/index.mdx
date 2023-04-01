@@ -1,11 +1,17 @@
+import Bleed from 'nextra-theme-docs/bleed'
+import Callout from 'nextra-theme-docs/callout'
+
 # Maratona de Filmes
 
-![michael_jackson](../public/michael_jackson_popcorn.gif)
+Autores:
+- [Nicolas Queiroga](https://github.com/NicolasQueiroga)
+- [Raphael Lahiry](https://github.com/Lahiry)
+
+![michael_jackson](michael_jackson_popcorn.gif)
  
 ## Introdução
 
-Você quer passar um final de semana assistindo ao máximo de filmes possível, mas há restrições quanto aos horários disponíveis e ao número de títulos que podem ser vistos em cada categoria, 
-como por exemplo comédia, drama, ação, etc.
+Você quer passar todos os dias de um final de semana assistindo ao máximo de filmes possível, mas há restrições quanto aos horários disponíveis e ao número de títulos que podem ser vistos em cada categoria, como por exemplo comédia, drama, ação, etc.
 
 ## Inputs
 
@@ -30,36 +36,40 @@ Os inputs para esse projeto seguem a estrutura a seguir:
 - a segunda linha indica qual o máximo de filmes que cada categoria pode ter;
 - da terceira linha em diante você vai encontrar os n filmes, suas respectivas hora de início, hora de término e categoria pertencente.
 
-Para mais detalhes sobre o Input Generator utilizado, clique [aqui](/input_generator).
+<Callout emoji="📚" title="Referências">
+    Para mais detalhes sobre como geramos nossos inputs, clique [aqui](/input_generator).
+</Callout>
 
-## Heurística Greedy
+## Heurística Gulosa
 
-![duck_donald](../public/duck_donald_money.gif)
+![duck_donald](duck_donald_money.gif)
 
-A primeira etapa do nosso projeto consiste na implementação da Heurística Greedy para a escolha dos filmes.
+A primeira etapa do nosso projeto consiste na implementação de uma heurística gulosa (greedy) para a escolha dos filmes.
 
-Ela ordena os filmes por hora de fim crescente e escolhe aqueles que começam primeiro e não conflitam com os filmes já escolhidos, além de verificar se há vagas disponíveis
-na categoria do filme.
+Ela ordena os filmes por hora de fim crescente e escolhe aqueles que começam primeiro e não conflitam com os filmes já escolhidos, além de verificar se há vagas disponíveis na categoria do filme.
 
-Para mais detalhes sobre a Heurística Greedy implementada, clique [aqui](/greedy_heuristic).
+<Callout emoji="📚" title="Referências">
+Para mais detalhes sobre a heurística gulosa implementada, clique [aqui](/greedy_heuristic).
+</Callout>
 
 ## Aleatorização
 
-![dices](../public/dices.gif)
+![dices](dices.gif)
 
-A aleatoriedade é uma estratégia bastante comum para construção de algoritmos de busca local, podendo ser usada de forma isolada ou de forma complementar a outra estratégia
-de varredura de um espaço de soluções.
+A aleatoriedade é uma estratégia bastante comum para construção de algoritmos de busca local, podendo ser usada de forma isolada ou de forma complementar a outra estratégia de varredura de um espaço de soluções.
 
-Assim segunda parte do projeto consiste na adaptação da Heurística Greedy para incluir aleatoriedade, de forma que durante a seleção de um filme tenhamos 25% de chance de selecionar
-um filme aleatório que respeite os horários disponíveis.
+Assim, a segunda parte do projeto consiste na adaptação da heurística gulosa para incluir aleatoriedade, de forma que durante a seleção de um filme tenhamos 25% de chance de selecionar um filme aleatório que respeite os horários disponíveis.
 
+<Callout emoji="📚" title="Referências">
 Para mais detalhes sobre a implementação da aleatorização clique [aqui](/randomness).
+</Callout>
 
 ## Comparação de resultados
 
-![king_kong_godzilla](../public/godzilla-kong.gif)
+![king_kong_godzilla](godzilla-kong.gif)
 
-Por fim, a última etapa desse projeto se concentra em analisar o desempenho dos dois algoritmos criados, quando testamos diferentes inputs, variando tanto a quantidade de filmes, quanto
-a quantidade de categorias. Para isso geramos uma série de inputs, com diferentes quantidades de filmes e categorias e gráficos para comparar os resultados dos algoritmos.
+Por fim, a última etapa desse projeto se concentra em analisar o desempenho dos dois algoritmos criados, quando testamos diferentes inputs, variando tanto a quantidade de filmes, quanto a quantidade de categorias. Para isso geramos uma série de inputs, com diferentes quantidades de filmes e categorias e gráficos para comparar os resultados dos algoritmos. Além de realizar o profiling dos algoritmos, para verificar onde eles gastam mais tempo.
 
+<Callout emoji="📚" title="Referências">
 Para mais detalhes sobre o desempenho dos algoritmos, clique [aqui](/results_comparison).
+</Callout>
