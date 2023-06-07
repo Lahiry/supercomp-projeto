@@ -1,0 +1,6 @@
+{
+  "index": "Exaustivo",
+  "normal_exhaustive": "Exaustivo Normal",
+  "omp_exhaustive": "Exaustivo OpenMP",
+  "thrust_exhaustive": "Exaustivo Thrust"
+}

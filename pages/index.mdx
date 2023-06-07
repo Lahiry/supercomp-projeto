@@ -49,7 +49,7 @@ A primeira etapa do nosso projeto consiste na implementação de uma heurística
 Ela ordena os filmes por hora de fim crescente e escolhe aqueles que começam primeiro e não conflitam com os filmes já escolhidos, além de verificar se há vagas disponíveis na categoria do filme.
 
 <Callout emoji="📚" title="Referências">
-Para mais detalhes sobre a heurística gulosa implementada, clique [aqui](/code/greedy_heuristic).
+Para mais detalhes sobre a heurística gulosa implementada, clique [aqui](/parte1/code/greedy_heuristic).
 </Callout>
 
 ## Aleatorização
@@ -61,15 +61,37 @@ A aleatoriedade é uma estratégia bastante comum para construção de algoritmo
 Assim, a segunda parte do projeto consiste na adaptação da heurística gulosa para incluir aleatoriedade, de forma que durante a seleção de um filme tenhamos 25% de chance de selecionar um filme aleatório que respeite os horários disponíveis.
 
 <Callout emoji="📚" title="Referências">
-Para mais detalhes sobre a implementação da aleatorização clique [aqui](/code/randomness).
+Para mais detalhes sobre a implementação da aleatorização clique [aqui](/parte1/code/randomness).
+</Callout>
+
+## Busca Exaustiva
+
+![exhausted](back_jlack.gif)
+
+A terceira etapa do projeto consiste na implementação de um algoritmo de busca exaustiva para encontrar a melhor solução possível para o problema.
+
+Para isso, geramos todas as possíveis combinações de filmes que podem ser assistidos, fazemos isso com um `for` loop que vai de 0 até 2^N, onde N é o número de filmes. Para cada número gerado, convertemos ele para binário e verificamos se a permutação atual é válida, ou seja, se não há conflitos de horário entre os filmes e se não há mais filmes do que o permitido em cada categoria. Caso a permutação seja válida, ela é adicionada a um vetor de permutações válidas. Então verificamos qual é aquela que tem o maior número de filmes assistidos e retornamos ela como a melhor solução.
+
+<Callout emoji="📚" title="Referências">
+Para mais detalhes sobre a implementação da paralelização clique [aqui](/parte2/code).
 </Callout>
 
 ## Comparação de resultados
 
 ![king_kong_godzilla](godzilla-kong.gif)
 
-Por fim, a última etapa desse projeto se concentra em analisar o desempenho dos dois algoritmos criados, quando testamos diferentes inputs, variando tanto a quantidade de filmes, quanto a quantidade de categorias. Para isso geramos uma série de inputs, com diferentes quantidades de filmes e categorias e gráficos para comparar os resultados dos algoritmos. Além de realizar o profiling dos algoritmos, para verificar onde eles gastam mais tempo.
+Por fim, a última etapa desse projeto se concentra em analisar o desempenho dos dois algoritmos criados nas duas partes
+
+### Parte 1: Heurística Gulosa (greedy) vs Aleatorização (randomness)
+Quando testamos diferentes inputs, variando tanto a quantidade de filmes, quanto a quantidade de categorias. Para isso geramos uma série de inputs, com diferentes quantidades de filmes e categorias e gráficos para comparar os resultados dos algoritmos. Além de realizar o profiling dos algoritmos, para verificar onde eles gastam mais tempo.
 
 <Callout emoji="📚" title="Referências">
-Para mais detalhes sobre o desempenho dos algoritmos, clique [aqui](/results_comparison).
+Para mais detalhes sobre o desempenho dos algoritmos da parte 1, clique [aqui](/parte1/results_comparison).
+</Callout>
+
+### Parte 2: Comparação de Busca Exaustiva Entre Paralelismos (CPU vs GPU)
+A segunda parte da comparação de resultados consiste em comparar o desempenho do algoritmo sem paralelisação de busca exaustiva e paralelizados com OpenMP e Thrust. Para isso, geramos uma série de inputs, com diferentes quantidades de filmes e categorias, gerando um output com a quantidade de filmes que podem ser encaixados na agenda. A partir dos outputs, foram gerados gráficos para comparar os resultados da performance dos algoritmos.
+
+<Callout emoji="📚" title="Referências">
+Para mais detalhes sobre o desempenho dos algoritmos da parte 2, clique [aqui](/parte2/results_comparison).
 </Callout>
