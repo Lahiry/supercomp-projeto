@@ -3,15 +3,13 @@ import Callout from 'nextra-theme-docs/callout'
 
 # Comparação de Resultados & Análise de Desempenho
 
-NEED TO DO
-
 ## Gráficos de desempenho
 
 Para medir o desempenho dos diferentes métodos de implementação da busca exaustiva, geramos um gráfico comparativo entre a implementação sem paralelização, com OpenMp e, por fim, com Thrust.
 
 ### filmes assistidos X total de filmes
 
-![_assistidos_vs_total_p2](_assistidos_vs_total_p2.png)
+![_assistidos_vs_total_p2](foto21.png)
 
 Do gráfico acima podemos ver que a linha dos três métodos de implementação são sobrepostos, isso é esperado, já que o número de filmes assistidos é o mesmo para os três métodos.
 
@@ -19,6 +17,6 @@ Agora podemos seguir com o próximo gráfico já que sabemos que os três métod
 
 ### runtime X total de filmes
 
-![_runtime_vs_total_p2](_runtime_vs_total_p2.png)
+![_runtime_vs_total_p2](foto22.png)
 
-NEED TO DO
+Ao observar o gráfico acima percebemos que para um número de filmes menor que 16 (aproximadamente), temos um tempo de execução muito parecido entre todas as implementações, isso acontece porque para um número pequeno de inputs, ser paralelizada não importa, e as vezes até atrapalha o tempo de execução. Já para um número maior de filmes, vemos uma grande melhoria no tempo de execução da implementação com OpenMp e Thrust, isso acontece porque para um número grande de inputs, a paralelização é muito mais eficiente que a implementação sequencial. Ainda, vemos que o tempo de execução da implementação com Thrust é menor que o tempo de execução da implementação com OpenMp, isso acontece porque a implementação com Thrust é mais eficiente que a implementação com OpenMp por utilizar uma GPU, que possui mais núcleos de processamento que uma CPU.

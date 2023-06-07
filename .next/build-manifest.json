@@ -25,6 +25,11 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
+    "/parte2/code/thrust_exhaustive": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/parte2/code/thrust_exhaustive.js"
+    ],
     "/parte2/results_comparison": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

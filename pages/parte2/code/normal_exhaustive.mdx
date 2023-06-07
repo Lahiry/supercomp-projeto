@@ -1,3 +1,125 @@
-# Busca Exaustiva Normal
+# Busca Exaustiva 
 
-NEED TO DO
+A implementação da Busca Exaustiva nesse problema foi quebrada em 3 partes, sendo elas a criação de todas as possibilidades, a validação das possibilidades e a busca exaustiva em si. A função `create_all_valid_possibilities` passa por cada um das permutações de filmes existentes e só adiciona essa possibilidade na lista de possibilidades válidas ao passar pela função de `validate_possibility`, que irá fazer todas as checagens necessárias para ver se de fato a possibilidade é válida ou não. Tendo todas as possibilidades válidas, a função `exhaustive_search` irá realizar a busca exaustiva de fato, retornando aquela possibilidade que tem o maior número de filmes alocados.
+
+## Implementação
+
+```cpp
+#include <map>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <chrono>
+
+using namespace std;
+
+struct movie {
+    int start;
+    int end;
+    int category;
+};
+
+bool order(movie a, movie b) {
+    if (a.start < b.start) {
+        return true;
+    } else if (a.start == b.start) {
+        return a.end < b.end;
+    } else {
+        return false;
+    }
+}
+
+bool validate_possibility(vector<movie> possibility, map<int, int> category_limit) {
+    int n = possibility.size();
+    vector<int> available_times;
+
+    for (int i = 0; i < 24; i++) {
+        available_times.push_back(i);
+    }
+
+    for (int i = 0; i < n; i++) {
+        
+        if (possibility[i].start < possibility[i].end) {
+            for (int j = possibility[i].start; j < possibility[i].end; j++) {
+                if (find(available_times.begin(), available_times.end(), j) == available_times.end()) {
+                    return false;
+                } 
+            }
+
+            if (category_limit[possibility[i].category] > 0) {
+                category_limit[possibility[i].category] -= 1;
+
+                for (int k = possibility[i].start; k < possibility[i].end; k++) {
+                    available_times.erase(remove(available_times.begin(), available_times.end(), k), available_times.end());
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+vector<vector<movie>> create_all_valid_possibilities(vector<movie> movies, map<int, int> category_limit) {
+    vector<vector<movie>> all_valid_possibilities;
+    for (int i = 0; i < (1 << movies.size()); i++) {
+        vector<movie> possibility;
+        for (int j = 0; j < movies.size(); j++) {
+            if (i & (1 << j)) {
+                possibility.push_back(movies[j]);
+            }
+        }
+        if (validate_possibility(possibility, category_limit)) {
+            all_valid_possibilities.push_back(possibility);
+        }
+    }
+
+    return all_valid_possibilities;
+}
+
+vector<movie> exhaustive_search(vector<vector<movie>> all_valid_possibilities) {
+    int n = all_valid_possibilities.size();
+    int best_possibility_size = 0;
+    vector<movie> best_possibility;
+
+    for (vector<movie> valid_possibility : all_valid_possibilities) {
+        if (valid_possibility.size() > best_possibility_size) {
+            best_possibility_size = valid_possibility.size();
+            best_possibility = valid_possibility;
+        }
+    }
+
+    return best_possibility;
+}
+
+int main() {
+    int n, c;
+    cin >> n >> c; 
+    vector<movie> movies;
+    map<int, int> category_limit;
+
+    for (int i = 0; i < c; i++) {
+        int limit;
+        cin >> limit;
+        category_limit[i+1] = limit;
+    }
+
+    for (int i = 0; i < n; i++) {
+        int start, end, category;
+        cin >> start >> end >> category;
+        movies.push_back({start, end, category});
+    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    vector<vector<movie>> all_valid_possibilities = create_all_valid_possibilities(movies, category_limit);
+    vector<movie> best_possibility = exhaustive_search(all_valid_possibilities);
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+
+    cout << 1 << ' ' << n << ' ' << c << ' ' << best_possibility.size() << ' ' << elapsed.count() << endl;
+    return 0;
+}
+```

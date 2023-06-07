@@ -1,3 +1,115 @@
-# Busca Exaustiva Thrust
+# Busca Exaustiva com Thrust
 
-NEED TO DO
+A paralelização com Thrust seguiu a mesma lógica implementada do algoritmo da Busca Exaustivo original, porém adaptado para a estrutura da biblioteca Thrust. Então para isso, primeiro é feito a leitura de todos os dados em `host_vector`s (leitura mais rápida) que depois são copiados para `device_vector`s para serem realizadas as operações do Thrust. Com isso é inicializado um `device_vector` com tamanho `(1 << n)` e preenchido em sequência, ou seja, representa todas as permutações possíveis com o número de filmes que recebeu. Com isso feito, esse `device_vector` irá passar por um `transform_reduce` com a função customizada `exhaustive_search` que irá verificar se a permutação atual é válida e retornar o número de filmes que ela possui. Por fim, esse `transform_reduce` irá retornar o maior número de filmes que uma permutação possui, que é o resultado final. A lógica usada na função customizada `exhaustive_search` é a mesma do algoritmo original, porém adaptada para o uso de `device_vector`s e `device_ptr`s.
+
+## Implementação
+
+```cpp
+#include <map>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <chrono>
+#include <thrust/remove.h>
+#include <thrust/extrema.h>
+#include <thrust/sequence.h>
+#include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
+#include <thrust/transform_reduce.h> 
+
+using namespace std;
+
+struct exhaustive_search {
+    int n;
+    int c;
+    int* start;
+    int* end;
+    int* categories;
+    int* category_limit;
+
+    exhaustive_search(int n, int c, int* start, int* end, int* categories, int* category_limit)
+        : n(n), c(c), start(start), end(end), categories(categories), category_limit(category_limit) {};
+
+    __device__
+    int operator()(const int& possibility) {
+        int total_movies = 0;
+
+        int available_times[24];
+        for (int i = 0; i < 24; i++) {
+            available_times[i] = 1;
+        }
+
+        int possibility_category_limit[20];
+        for (int i = 0; i < c; i++) {
+            possibility_category_limit[i] = category_limit[i];
+        }
+        
+        for (int i = 0; i < n; i++) {
+            if (possibility & (1 << i)) {
+                if (start[i] < end[i]) {
+                    for (int j = start[i]; j < end[i]; j++) {
+                        if (available_times[j] == 0) {
+                            return 0;
+                        }
+                    }
+
+                    if (possibility_category_limit[categories[i] - 1] > 0) {
+                        possibility_category_limit[categories[i] - 1] -= 1;
+
+                        for (int k = start[i]; k < end[i]; k++) {
+                            available_times[k] = 0;
+                        }
+
+                        total_movies += 1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    return 0;
+                }  
+            }
+        }
+        
+        return total_movies;
+    }
+};
+
+int main() {
+    int n, c;
+    cin >> n >> c; 
+
+    thrust::host_vector<int> category_limit_cpu(c);
+    for (int i = 0; i < c; i++) {
+        cin >> category_limit_cpu[i];
+    }
+
+    thrust::host_vector<int> start_cpu(n);
+    thrust::host_vector<int> end_cpu(n);
+    thrust::host_vector<int> categories_cpu(n);
+    for (int i = 0; i < n; i++) {
+        cin >> start_cpu[i] >> end_cpu[i] >> categories_cpu[i];
+    }
+
+    thrust::device_vector<int> start_gpu(start_cpu);
+    thrust::device_vector<int> end_gpu(end_cpu);
+    thrust::device_vector<int> categories_gpu(categories_cpu);
+    thrust::device_vector<int> category_limit_gpu(category_limit_cpu);
+    thrust::device_vector<int> all_possibilities_gpu((1 << n));
+    int* start_gpu_ptr = thrust::raw_pointer_cast(start_gpu.data());
+    int* end_gpu_ptr = thrust::raw_pointer_cast(end_gpu.data());
+    int* categories_gpu_ptr = thrust::raw_pointer_cast(categories_gpu.data());
+    int* category_limit_gpu_ptr = thrust::raw_pointer_cast(category_limit_gpu.data());
+
+
+
+    auto start = std::chrono::high_resolution_clock::now();
+    thrust::sequence(all_possibilities_gpu.begin(), all_possibilities_gpu.end());
+    int max_films = thrust::transform_reduce(all_possibilities_gpu.begin(), all_possibilities_gpu.end(), exhaustive_search(n, c, start_gpu_ptr, end_gpu_ptr, categories_gpu_ptr, category_limit_gpu_ptr), 0.0, thrust::maximum<int>());
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+
+
+    cout << 2 << ' ' << n << ' ' << c << ' ' << max_films << ' ' << elapsed.count() << endl;
+    return 0;
+}
+```
